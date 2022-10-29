@@ -2,8 +2,6 @@
 using Newtonsoft.Json;
 using WebApiWithSwagger.Models;
 
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-
 namespace WebApiWithSwagger.Controllers
 {
     [Route("api/[controller]")]

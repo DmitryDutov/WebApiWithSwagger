@@ -1,6 +1,6 @@
 ﻿using Newtonsoft.Json;
 using System.Text;
-using Serilog;
+//using Serilog;
 
 namespace WebApiWithSwagger.Models
 {
@@ -18,16 +18,16 @@ namespace WebApiWithSwagger.Models
 
         public static void Init()
         {
-            Log.Warning("Пытаюсь инициализировать сервис Settings");
+            //Log.Warning("Пытаюсь инициализировать сервис Settings");
             _instance = new Settings();
-            Log.Warning("Инициализирован сервис Settings");
+            //Log.Warning("Инициализирован сервис Settings");
         }
 
         public static void InitByCommand(string loadPath)
         {
-            Log.Warning("Пытаюсь инициализировать сервис Settings");
+            //Log.Warning("Пытаюсь инициализировать сервис Settings");
             _instance = new Settings(loadPath);
-            Log.Warning("Инициализирован сервис Settings");
+            //Log.Warning("Инициализирован сервис Settings");
         }
 
         public Settings()
@@ -50,7 +50,7 @@ namespace WebApiWithSwagger.Models
         //Получаем настройки из файла
         private static List<Eqp> GetSettings()
         {
-            Log.Warning("Пытаюсь прочитать настройки по стандартному пути (сервис Settings)");
+            //Log.Warning("Пытаюсь прочитать настройки по стандартному пути (сервис Settings)");
             var listEqp = new List<Eqp>();
 
             try
@@ -59,29 +59,29 @@ namespace WebApiWithSwagger.Models
                 _settingsObject = settings;
                 listEqp = (List<Eqp>)settings.Eqps;
 
-                Log.Warning($"Настройки по стандартному пути прочитаны (сервис Settings)");
+                //Log.Warning($"Настройки по стандартному пути прочитаны (сервис Settings)");
             }
             catch (Exception e)
             {
-                Log.Error($"Ошибка чтения настроек по стандартному пути (сервис Settings): {e.Message}");
+                //Log.Error($"Ошибка чтения настроек по стандартному пути (сервис Settings): {e.Message}");
             }
             return listEqp;
         }
 
         private static string GetMainPath()
         {
-            Log.Warning("Пытаюсь прочитать основную директорию по стандартному пути (сервис Settings)");
+            //Log.Warning("Пытаюсь прочитать основную директорию по стандартному пути (сервис Settings)");
             var mainPath = string.Empty;
             try
             {
                 var settings = JsonConvert.DeserializeObject<Rootobject>(File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "appsettings.json")));
                 mainPath = settings.MainPath;
 
-                Log.Warning($"Основная директория прочитана по стандартному пути (сервис Settings)");
+                //Log.Warning($"Основная директория прочитана по стандартному пути (сервис Settings)");
             }
             catch (Exception e)
             {
-                Log.Error($"Ошибка чтения директории по стандартному пути (сервис Settings): {e.Message}");
+                //Log.Error($"Ошибка чтения директории по стандартному пути (сервис Settings): {e.Message}");
             }
             return mainPath;
         }
@@ -90,19 +90,19 @@ namespace WebApiWithSwagger.Models
         {
             try
             {
-                Log.Information($"Сериализация завершена объекта по пути {savePath}");
+                //Log.Information($"Сериализация завершена объекта по пути {savePath}");
                 var serialized = JsonConvert.SerializeObject(_settingsObject);
 
                 if (serialized.Length > 0)
                 {
                     File.Create(savePath).Close();
                     File.WriteAllText(savePath, serialized, Encoding.Unicode);
-                    Log.Information($"Сериализованный объект записан в файл по пути: {savePath}");
+                    //Log.Information($"Сериализованный объект записан в файл по пути: {savePath}");
                 }
             }
             catch (Exception e)
             {
-                Log.Error($"{e.Message}");
+                //Log.Error($"{e.Message}");
             }
         }
         public static List<Eqp> LoadSettings(string loadPath)
@@ -113,11 +113,11 @@ namespace WebApiWithSwagger.Models
                 var getSettings = JsonConvert.DeserializeObject<Rootobject>(File.ReadAllText(loadPath));
                 _settingsObject = getSettings;
                 settings = (List<Eqp>)getSettings.Eqps;
-                Log.Information($"Настройки из файла {loadPath} прочитаны");
+                //Log.Information($"Настройки из файла {loadPath} прочитаны");
             }
             catch (Exception e)
             {
-                Log.Error($"Ошибка чтения настроек по пути {loadPath} (сервис Settings): {e.Message}");
+                //Log.Error($"Ошибка чтения настроек по пути {loadPath} (сервис Settings): {e.Message}");
             }
 
             return settings;
@@ -132,7 +132,7 @@ namespace WebApiWithSwagger.Models
             }
             catch (Exception e)
             {
-                Log.Error($"Ошибка чтения общей директории по пути {loadPath} (сервис Settings): {e.Message}");
+                //Log.Error($"Ошибка чтения общей директории по пути {loadPath} (сервис Settings): {e.Message}");
             }
 
             return mainPath;

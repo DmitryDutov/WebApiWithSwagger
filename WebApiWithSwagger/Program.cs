@@ -1,11 +1,10 @@
-using Serilog;
+//using Serilog;
 
 var builder = WebApplication.CreateBuilder(args);
 
 //Настройка логирования
-builder.Logging.ClearProviders();                          //очищаем провайдеры
-Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(builder.Configuration).CreateLogger(); //создаём логер
-
+//builder.Logging.ClearProviders();                          //очищаем провайдеры
+//Log.Logger = new LoggerConfiguration().ReadFrom.Configuration(builder.Configuration).CreateLogger(); //создаём логер
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
