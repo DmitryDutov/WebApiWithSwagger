@@ -9,7 +9,8 @@ namespace WebApiWithSwagger.Controllers
     public class SettingsController : ControllerBase
     {
         // GET: api/<SettingsController>
-        public string Get() //GET: "https://localhost:7279/api/Settings"
+        [HttpGet]
+        public string Get() //GET: "http://localhost:5163/api/Settings"
         {
             var settings = Settings.SettingsObject;
             var serialize = JsonConvert.SerializeObject(settings);
@@ -18,10 +19,14 @@ namespace WebApiWithSwagger.Controllers
 
 
         // GET api/<SettingsController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
+        [HttpGet("{guid}")] //GET: "http://localhost:5163/api/Settings/00000000-0000-0000-0000-000000000001"
+        public string GetByGuid(Guid guid)
         {
-            return "value";
+            var settings = Settings.SettingsObject;
+            var eqp = settings.Eqps.FirstOrDefault(x => x.EqpGuid == guid);
+            var serialize = JsonConvert.SerializeObject(eqp);
+
+            return serialize;
         }
 
         // POST api/<SettingsController>

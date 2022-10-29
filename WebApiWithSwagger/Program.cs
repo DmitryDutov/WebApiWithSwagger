@@ -1,5 +1,7 @@
 //using Serilog;
 
+using WebApiWithSwagger.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 
 //Настройка логирования
@@ -18,6 +20,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+Settings.Init();
 app.UseAuthorization();
 app.MapControllers();
 app.Run();
