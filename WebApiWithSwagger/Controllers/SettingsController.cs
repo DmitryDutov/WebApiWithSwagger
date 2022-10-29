@@ -51,21 +51,62 @@ namespace WebApiWithSwagger.Controllers
 
                 settings.Eqps = listEquips;
                 Settings.SaveSettings(@"C:\Test\Severstal.DeviceMonitoring\Settings\appsettings.json");
-                return Ok($"{newEqp.Name} is created");
+                return Ok($"{newEqp.Name} добавлено");
             }
 
             return NotFound();
         }
 
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpPut("edit/guid:{guid}")] // PUT -> 00000000-0000-0000-0000-000000000001; NewEqp;NewEqp.txt;127.0.0.3;8888;false;unicode;1;[a-z]
+        public IActionResult Edit(Guid guid, [FromBody] string value)
         {
+            var settings = Settings.SettingsObject;                                    //считываем все настройки
+            var delSettings = settings.Eqps;                                           //считываем всё оборудование
+            var obj = delSettings.FirstOrDefault(x => x?.EqpGuid == guid);              //находим объект
+
+            var newEqp = CreateEqp(value);
+            if (obj != null)
+            {
+                obj.EqpGuid = guid;
+                obj.Name = newEqp.Name;
+                obj.Path = newEqp.Path;
+                obj.Address = newEqp.Address;
+                obj.Port = Convert.ToInt32(newEqp.Port);
+                obj.Active = Convert.ToBoolean(newEqp.Active);
+                obj.Encoding = newEqp.Encoding;
+                obj.Interval = Convert.ToInt32(newEqp.Interval);
+                obj.Mask = newEqp.Mask;
+
+                newEqp = null; //обнуляем новое оборудование
+
+                //Settings.SaveSettings(Path.Combine(AppContext.BaseDirectory, "appsettings.json"));
+                Settings.SaveSettings(@"C:\Test\Severstal.DeviceMonitoring\Settings\appsettings.json");
+
+                return Ok($"Оборудование с номером {obj.EqpGuid} изменено");
+            }
+
+            return NotFound($"Оборудование не изменено");
         }
 
-        // DELETE api/<SettingsController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
+        [HttpDelete("{guid}")] //DELETE -> 00000000-0000-0000-0000-000000000013
+        public IActionResult Delete(Guid guid)
         {
+            var settings = Settings.SettingsObject;                                                    //считываем все настройки
+            var delSettings = settings.Eqps;                                                           //считываем всё оборудование
+            var delObject = delSettings.FirstOrDefault(x => x?.EqpGuid == guid);                        //находим удаляемый объект
+
+            if (delObject != null)
+            {
+                delSettings.Remove(delObject);                                                                  //удаляем найденный объект из списка
+                settings.Eqps = delSettings;                                                                    //обновляем информацию в Settings.Eqps
+
+                //Settings.SaveSettings(Path.Combine(AppContext.BaseDirectory, "appsettings.json"));            //сохраняем в файл
+                Settings.SaveSettings(@"C:\Test\Severstal.DeviceMonitoring\Settings\appsettings.json");
+
+                return Ok($"Оборудование {delObject.Name} удалено");
+            }
+
+            return NotFound($"Оборудование на удалено");
         }
 
         private Eqp? CreateEqp(string value)
