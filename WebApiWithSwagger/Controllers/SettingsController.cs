@@ -1,4 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
+using WebApiWithSwagger.Models;
 
 // For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
 
@@ -9,11 +11,13 @@ namespace WebApiWithSwagger.Controllers
     public class SettingsController : ControllerBase
     {
         // GET: api/<SettingsController>
-        [HttpGet]
-        public IEnumerable<string> Get()
+        public string Get() //GET: "https://localhost:7279/api/Settings"
         {
-            return new string[] { "value1", "value2" };
+            var settings = Settings.SettingsObject;
+            var serialize = JsonConvert.SerializeObject(settings);
+            return serialize;
         }
+
 
         // GET api/<SettingsController>/5
         [HttpGet("{id}")]
