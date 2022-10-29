@@ -51,13 +51,12 @@ namespace WebApiWithSwagger.Controllers
 
                 settings.Eqps = listEquips;
                 Settings.SaveSettings(@"C:\Test\Severstal.DeviceMonitoring\Settings\appsettings.json");
-                return Ok();
+                return Ok($"{newEqp.Name} is created");
             }
 
             return NotFound();
         }
 
-        // PUT api/<SettingsController>/5
         [HttpPut("{id}")]
         public void Put(int id, [FromBody] string value)
         {
