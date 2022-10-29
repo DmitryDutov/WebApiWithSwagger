@@ -29,11 +29,34 @@ namespace WebApiWithSwagger.Controllers
             return serialize;
         }
 
-        // POST api/<SettingsController>
-        [HttpPost]
-        public void Post([FromBody] string value)
+        [HttpPost("add")] //POST -> http://localhost:5229/api/add
+        public IActionResult Add([FromBody] string value)
         {
+            var settings = Settings.SettingsObject;
+            var eqpGuid = settings.Eqps.Select(x => x.EqpGuid).Max();
+            var line = Convert.ToString(eqpGuid);
+            var num = Convert.ToInt64(line.Replace("-", string.Empty));
+            num++;
+            var format = string.Format($"{num:00000000-0000-0000-0000-000000000000}"); //00000000-0000-0000-0000-000000000012
+            var nextGuid = Guid.Parse(format);
+
+            //var deserialize = JsonConvert.DeserializeObject<Rootobject>(File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "appsettings.json")));
+            var newEqp = JsonConvert.DeserializeObject<Eqp>(value);
+            if (newEqp != null)
+            {
+                newEqp.EqpGuid = nextGuid;
+
+                var listEquips = settings.Eqps; //получаем список оборудования
+                listEquips.Add(newEqp); //добавляем новое
+
+                //Settings.SaveSettings(Path.Combine(AppContext.BaseDirectory, "appsettings.json"));
+                Settings.SaveSettings(@"C:\Test\Severstal.DeviceMonitoring\Settings\appsettings.json");
+                return Ok();
+            }
+
+            return NotFound();
         }
+
 
         // PUT api/<SettingsController>/5
         [HttpPut("{id}")]
